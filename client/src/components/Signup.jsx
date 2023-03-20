@@ -20,8 +20,12 @@ function Signup() {
       body: JSON.stringify(user),
     }).then(async data=>{
         const res=await data.json()
-        if(data.status===200)
-        alert(res.msg)
+        debugger
+        if(data.ok)
+        {
+          alert(res.msg)
+          console.log(res);
+        }
         else
         alert(res.msg)
     })

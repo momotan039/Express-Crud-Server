@@ -1,8 +1,11 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API } from "../constance";
+import { SIGNIN } from "../services/Auth";
 
 function Signin() {
   const [user, setUser] = useState({});
+  const navigator=useNavigate();
 
   const onChangeInput = () => {
     const filed = event.target;
@@ -18,12 +21,16 @@ function Signin() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(user),
-    }).then(async data=>{
-        const res=await data.json()
-        if(data.status===200)
-        alert(res.msg)
+    }).then(async res=>{
+        const data=await res.json()
+        if(res.ok)
+        {
+          SIGNIN(data.token)
+          // const data=jwt.verify(data.token,'myseqtokvery')
+          navigator('/')
+        }
         else
-        alert(res.msg)
+        alert(data.msg)
     })
   };
 
