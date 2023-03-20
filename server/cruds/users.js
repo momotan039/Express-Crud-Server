@@ -32,6 +32,7 @@ router.post('/signup',(req,res)=>{
 
 router.post('/signin',(req,res)=>{
     const user=req.body;
+    console.log(user);
     const users=JSON.parse(fs.readFileSync(path.join(__dirname,'..','utils/usersData.json'),'utf8'))
     const temp=users.find(f=>f.username===user.username && f.password===user.password)
 
