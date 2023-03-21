@@ -1,16 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
+import { AuthContext } from '../App'
 function Home() {
+    const authContext=useContext(AuthContext)
     const navigator=useNavigate()
     useEffect(()=>{
-        const token=localStorage.getItem('token')
-        if(!token)
+      debugger
+        if(!authContext.user)
         {
             navigator('/signin')
             return
         }
-    },[])
+    })
 
   return (
    <div>
