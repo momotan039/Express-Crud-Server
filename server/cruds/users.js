@@ -6,13 +6,13 @@ const bcrypt = require('bcrypt');
 const jwt=require('jsonwebtoken')
 
 router.get('/',(req,res)=>{
-    const users=JSON.parse(fs.readFileSync(path.join(__dirname,'..','utils/usersData.json'),'utf8'))
+    const users=JSON.parse(fs.readFileSync(path.join(__dirname,'..','db/usersData.json'),'utf8'))
     res.send(users)
 })
 
 router.post('/signup',(req,res)=>{
     const user=req.body;
-    const users=JSON.parse(fs.readFileSync(path.join(__dirname,'..','utils/usersData.json'),'utf8'))
+    const users=JSON.parse(fs.readFileSync(path.join(__dirname,'..','db/usersData.json'),'utf8'))
     const temp=users.find(f=>f.username===user.username)
 
     if(temp)
@@ -27,7 +27,7 @@ router.post('/signup',(req,res)=>{
     user.password= bcrypt.hashSync(user.password,10)
     // save it to users
     users.push(user)
-    fs.writeFileSync(path.join(__dirname,'..','utils/usersData.json'),JSON.stringify(users))
+    fs.writeFileSync(path.join(__dirname,'..','db/usersData.json'),JSON.stringify(users))
     res.json({
         msg:'sign up done succesfully , Please Signin to Compolete',
     })
@@ -36,7 +36,7 @@ router.post('/signup',(req,res)=>{
 router.post('/signin',(req,res)=>{
   const user = req.body;
   const users = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "..", "utils/usersData.json"), "utf8")
+    fs.readFileSync(path.join(__dirname, "..", "db/usersData.json"), "utf8")
   );
 
   //get user from database
@@ -65,9 +65,15 @@ router.post('/signin',(req,res)=>{
     }
   );
 
+  //save the token in cookie
+  res.cookie('token',token,{httpOnly:true})
+  
+  //copeied user without password
+  const {password,...copy_user}=temp
+
   res.status(201).json({
     msg: "sign in done succesfully",
-    token: token,
+    user:copy_user
   });
 
 })

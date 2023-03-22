@@ -1,12 +1,13 @@
-import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../App";
 import { API } from "../constance";
-import { SIGNIN } from "../services/Auth";
+import * as Auth from "../services/Auth";
 
 function Signin() {
   const [user, setUser] = useState({});
   const navigator=useNavigate();
-
+  const authContext=useContext(AuthContext)
   const onChangeInput = () => {
     const filed = event.target;
     setUser({ ...user, [filed.name]: filed.value });
@@ -14,20 +15,21 @@ function Signin() {
 
   const clickMe = () => {
     event.preventDefault();
-
+    //fetch the data from the srever
     fetch(API + "/users/signin", {
       method: "POST",
+      credentials:'include',
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(user),
     }).then(async res=>{
-        const data=await res.json()
+        const {user}=await res.json()
         if(res.ok)
         {
-          SIGNIN(data.token)
+          // console.log(res);
+          authContext.signIn(user)
           // const data=jwt.verify(data.token,'myseqtokvery')
-          navigator('/')
         }
         else
         alert(data.msg)
@@ -51,9 +53,15 @@ function Signin() {
           />
         </div>
       </div>
-      <button onClick={clickMe} type="submit">
+      {
+        !authContext.user&&
+        <button onClick={clickMe} type="submit">
         SignIn
       </button>
+      }
+      {
+        authContext.user&&<Link to='/'>go to home</Link>
+      }
     </form>
   );
 }

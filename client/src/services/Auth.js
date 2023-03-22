@@ -1,11 +1,17 @@
 export const SIGNOUT=()=>{
-    localStorage.removeItem('token')
+    localStorage.removeItem('user')
 }
 
-export const SIGNIN=(token)=>{
-    localStorage.setItem('token',token)
+export const SIGNIN=(user)=>{
+    localStorage.setItem('user',JSON.stringify(user))
 }
 
 export const isSignIn=()=>{
-    return localStorage.getItem('token')?true:false
+    return localStorage.getItem('user')?true:false
 }
+
+export const getUser=()=>{
+    return JSON.parse(localStorage.getItem('user'))
+}
+
+
