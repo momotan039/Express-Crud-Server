@@ -36,10 +36,7 @@ function App() {
     ]
    }
   ])  
-  useEffect(()=>{
-    const f=user
-    debugger
-  },[user])
+  
   
   return (
    <AuthContext.Provider value={{

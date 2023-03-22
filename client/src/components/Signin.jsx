@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import { API } from "../constance";
 import * as Auth from "../services/Auth";
@@ -15,7 +15,7 @@ function Signin() {
 
   const clickMe = () => {
     event.preventDefault();
-
+    //fetch the data from the srever
     fetch(API + "/users/signin", {
       method: "POST",
       credentials:'include',
@@ -27,12 +27,8 @@ function Signin() {
         const {user}=await res.json()
         if(res.ok)
         {
-          console.log(res);
+          // console.log(res);
           authContext.signIn(user)
-          setTimeout(() => {
-            console.log('after 3 seconds');
-            navigator('/')
-          }, 3000);
           // const data=jwt.verify(data.token,'myseqtokvery')
         }
         else
@@ -57,9 +53,15 @@ function Signin() {
           />
         </div>
       </div>
-      <button onClick={clickMe} type="submit">
+      {
+        !authContext.user&&
+        <button onClick={clickMe} type="submit">
         SignIn
       </button>
+      }
+      {
+        authContext.user&&<Link to='/'>go to home</Link>
+      }
     </form>
   );
 }

@@ -4,20 +4,23 @@ import { AuthContext } from '../App'
 function Home() {
     const authContext=useContext(AuthContext)
     const navigator=useNavigate()
+    const user= authContext.user
+
     useEffect(()=>{
-      debugger
-        if(!authContext.user)
-        {
-            navigator('/signin')
-            return
-        }
+      if(!user)
+      {
+        debugger
+          navigator('/signin')
+          return
+      }
     })
 
   return (
    <div>
      <h1>Home Page</h1>
-     <h3>Welcome Mohammed ♥</h3>
-     <Link to='/users'>users</Link>
+     {
+      user&& <h3>Welcome {user.username} ♥</h3>
+     }
    </div>
   )
 }
