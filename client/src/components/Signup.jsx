@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { API } from "../constance";
 
 function Signup() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({role:'user'});
 
   const onChangeInput = () => {
     const filed = event.target;
@@ -11,7 +11,6 @@ function Signup() {
 
   const clickMe = () => {
     event.preventDefault();
-
     fetch(API + "/users/signup", {
       method: "POST",
       headers: {

@@ -3,9 +3,19 @@ const router=express.Router()
 const fs=require('fs')
 const path = require('path');
 const bcrypt = require('bcrypt');
-const jwt=require('jsonwebtoken')
+const myJwt=require('../services/jwt')
 
 router.get('/',(req,res)=>{
+    const userPayLoad=myJwt.verifyToken(req.cookies.token)
+    if(typeof(userPayLoad)==='string')
+    {
+      res.status(400).send(userPayLoad)
+      return
+    }
+    if(userPayLoad.role!=='admin'){
+      res.status(401).send('You don\'t have permision to do that!!!')
+      return
+    }    
     const users=JSON.parse(fs.readFileSync(path.join(__dirname,'..','db/usersData.json'),'utf8'))
     res.send(users)
 })
@@ -56,15 +66,10 @@ router.post('/signin',(req,res)=>{
     });
     return;
   }
-  // create the token
-  const token = jwt.sign(
-    { role: "user", username: temp.username },
-    "myseqtokvery",
-    {
-      expiresIn: "2m",
-    }
-  );
-
+ 
+ // create the token
+  const token=myJwt.genearteToken(temp)
+  
   //save the token in cookie
   res.cookie('token',token,{httpOnly:true})
   
