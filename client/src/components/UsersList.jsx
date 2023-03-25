@@ -5,10 +5,19 @@ function UsersList() {
   const [users,setUesrs]=useState(null)
   useEffect(()=>{
     fetch(API+'/users',{
-      credentials:'include'
-    }).then(res=>res.json())
-    .then((data)=>setUesrs(data))
-    .catch((err)=>console.log(err.error))
+      credentials:'include',
+      headers:{
+        'Content-Type':'application/json'
+      }
+    }).then(async res=>{
+      const data=await res.json()
+      if(!res.ok)
+      {
+        alert(data.msg)
+        return
+      }
+      setUesrs(data);
+    })
   },[])
   return (
    <div className="users-list">

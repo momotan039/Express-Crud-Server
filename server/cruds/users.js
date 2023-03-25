@@ -7,13 +7,19 @@ const myJwt=require('../services/jwt')
 
 router.get('/',(req,res)=>{
     const userPayLoad=myJwt.verifyToken(req.cookies.token)
+    console.log(userPayLoad);
+    
     if(typeof(userPayLoad)==='string')
     {
-      res.status(400).send(userPayLoad)
+      res.status(400).send({
+        msg:userPayLoad
+      })
       return
     }
     if(userPayLoad.role!=='admin'){
-      res.status(401).send('You don\'t have permision to do that!!!')
+      res.status(401).send({
+        msg:'You don\'t have permision to do that!!!'
+      })
       return
     }    
     const users=JSON.parse(fs.readFileSync(path.join(__dirname,'..','db/usersData.json'),'utf8'))

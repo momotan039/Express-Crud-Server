@@ -3,7 +3,7 @@ const jwt=require('jsonwebtoken')
 
 const genearteToken=(user)=>{
  const token = jwt.sign(
-    { role: "user", username: user.username },
+    { role: user.role, username: user.username },
     "myseqtokvery",
     {
       expiresIn: "2m",
